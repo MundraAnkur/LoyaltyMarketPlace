@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title>Brand</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
+</head>
+<body>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <div class="container-fluid">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active" th:href="@{/brand}">Home</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Customer Loyalty Market Place</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav">
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link active" th:href="@{/logout}">Logout</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<br>
+<br>
+<div class="container-fluid">
+    <!--    <h1>Welcome Brand <span sec:authentication="principal.username"></span></h1>-->
+    <h1>Brand Operations</h1>
+    <p class="align-middle"><a th:href="@{/brand/add_loyalty_program}">Add Loyalty Program</a></p>
+    <p class="align-middle"><a th:href="@{/brand/add_RE_rules}">Add RE Rules</a></p>
+    <p class="align-middle"><a th:href="@{/brand/add_RR_rules}">Add RR Rules</a></p>
+    <p class="align-middle"><a th:href="@{/brand/update_RR_rules}">Update RR Rules</a></p>
+    <p class="align-middle"><a th:href="@{/brand/update_RE_rules}">Update RE Rules</a></p>
+    <p class="align-middle"><a th:href="@{/brand/validate_loyalty_program}">Validate Loyalty Program</a></p>
+</div>
+</body>
+</html>

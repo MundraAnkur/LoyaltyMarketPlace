@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="ISO-8859-1">
+  <title>Registration</title>
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
+</head>
+<body>
+
+<!-- create navigation bar ( header) -->
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  <div class="container-fluid">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link active" href="/">Home</a>
+      </li>
+    </ul>
+
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Customer Loyalty Market Place</a>
+      </li>
+    </ul>
+
+    <ul class="navbar-nav"></ul>
+  </div>
+</nav>
+<br>
+<br>
+<!-- Create HTML registration form -->
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+
+      <!-- success message -->
+      <div th:if="${param.success}">
+        <div class="alert alert-info">You've successfully registered!</div>
+        <meta http-equiv="refresh" content="3,url=/login">
+      </div>
+
+      <form class="ui form" th:action="@{/brand/add_reward_brand_regular}" method="post" th:object="${rewardType}">
+        <span> Rewards List : </span><span th:text="${rewardsList}"></span>
+        <ul>
+          <li th:each="reward : ${rewardsList}">
+            <div class="ui checkbox">
+              <input type="checkbox" th:field="*{rewardName}" th:value="${reward}">
+              <label th:text="${reward}"></label>
+
+            </div>
+          </li>
+        </ul>
+
+        <div class="field">
+          <button type="submit">Add Rewards</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+</body>
+</html>

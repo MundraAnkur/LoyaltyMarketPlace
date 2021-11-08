@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="ISO-8859-1">
+  <title>Registration</title>
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
+  <link rel="stylesheet" href="css/register.css">
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  <div class="container-fluid">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link active" href="/">Home</a>
+      </li>
+    </ul>
+
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Customer Loyalty Market Place</a>
+      </li>
+    </ul>
+
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#"></a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<div class="container-fluid">
+  <div class="row justify-content-center mt-0">
+    <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-3 mb-2">
+      <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
+        <h2><strong>Registration</strong></h2>
+        <div class="row">
+          <div class="col-md-12 mx-0">
+            <form id="msform" th:action="@{/register}" method="post" th:object="${marketUser}">
+              <fieldset>
+                <div class="form-card">
+                  <h2 class="fs-title">Registration for?</h2>
+                  <div class="radio-group">
+                    <input type="radio" class="radio" name="role" th:value="${'BRAND'}"  th:field="*{role}"/>
+                    <h2><strong>Brand</strong></h2>
+                    <input type="radio" class="radio" name="role" th:value="${'CUSTOMER'}" th:field="*{role}"/>
+                    <h2><strong>Customer</strong></h2>
+                  </div>
+                </div>
+                <input type="submit" name="confirm" class="next action-button" value="Confirm" />
+                <div class="container" th:align="center">
+                  <span>Already registered? <a href="/" th:href="@{/login}">Login here</a></span>
+                </div>
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

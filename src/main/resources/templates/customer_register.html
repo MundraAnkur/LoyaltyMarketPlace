@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="ISO-8859-1">
+    <title>Customer Registration</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
+    <link rel="stylesheet" href="/css/register.css">
+</head>
+<body>
+
+<!-- create navigation bar ( header) -->
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+    <div class="container-fluid">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active" href="/">Home</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Customer Loyalty Market Place</a>
+            </li>
+        </ul>
+
+        <ul class="navbar-nav"></ul>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <div class="row justify-content-center mt-0">
+        <div class="col-11 col-sm-9 col-md-7 col-lg-6 text-center p-0 mt-1 mb-1">
+            <div class="card px-0 pt-4 pb-0 mt-1 mb-1">
+                <!-- success message -->
+                <div th:if="${param.success}">
+                    <div class="alert alert-info">You've successfully registered!</div>
+                    <meta http-equiv="refresh" content="3,url=/login">
+                </div>
+
+                <h2><strong>Customer Registration</strong></h2>
+
+                <div class="row">
+                    <div class="col-md-12 mx-0">
+                        <form id="msform" th:action="@{/register/customer}" method="post">
+                            <fieldset>
+                                <div class="form-card">
+                                    <h2 class="fs-title">Customer Information</h2>
+                                    <input id="c_id" placeholder="Id" class="form-control"
+                                           th:field="*{customer.customerId}" required autofocus="autofocus" />
+
+                                    <input id="c_name" placeholder="Name" class="form-control"
+                                           th:field="*{customer.name}" required autofocus="autofocus" />
+
+                                    <input id="c_phone" type="tel" placeholder="Phone" class="form-control"
+                                           th:field="*{customer.phone}" required autofocus="autofocus" pattern="[0-9]{10}" />
+
+                                    <input id="c_address" placeholder="Address" class="form-control"
+                                           th:field="*{customer.address}" required autofocus="autofocus" />
+
+                                    <input id="cw_id" placeholder="Wallet Id" class="form-control"
+                                           th:field="*{customer.walletId}" required autofocus="autofocus" />
+
+                                    <input id="userName" class="form-control" th:field="*{marketUser.userName}"
+                                           required autofocus="autofocus" placeholder="User Name"/>
+
+                                    <input id="password" class="form-control" type="password" placeholder="Password"
+                                           th:field="*{marketUser.password}" required autofocus="autofocus" />
+                                </div>
+                                <input type="submit" name="register" class="next action-button" value="Register" />
+                                <div class="container">
+                                    <span>Already registered? <a href="/" th:href="@{/login}">Login here</a></span>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

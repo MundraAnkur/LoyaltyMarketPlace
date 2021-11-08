@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="ISO-8859-1">
+  <title>Registration</title>
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
+</head>
+<body>
+
+<!-- create navigation bar ( header) -->
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+  <div class="container-fluid">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link active" href="/">Home</a>
+      </li>
+    </ul>
+
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#">Customer Loyalty Market Place</a>
+      </li>
+    </ul>
+
+    <ul class="navbar-nav"></ul>
+  </div>
+</nav>
+<br>
+<br>
+<!-- Create HTML registration form -->
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+
+      <!-- success message -->
+      <div th:if="${param.success}">
+        <div class="alert alert-info">Reward Added!</div>
+        <meta http-equiv="refresh" content="2,url=/admin/add_reward">
+      </div>
+
+      <form th:action="@{/admin/add_reward}" method="post" th:object="${rewardCategory}">
+        <div class="form-group">
+          <label class="control-label" for="rewardCode"> Reward Code</label>
+          <input id="rewardCode" class="form-control" th:field="*{rewardId}"
+                 required autofocus="autofocus" />
+        </div>
+
+        <div class="form-group">
+          <label class="control-label" for="rewardName"> Reward Name</label>
+          <input id="rewardName" class="form-control" th:field="*{rewardName}"
+                 required autofocus="autofocus" />
+        </div>
+        <button type="submit">Add Reward</button>
+      </form>
+    </div>
+  </div>
+</div>
+</body>
+</html>
