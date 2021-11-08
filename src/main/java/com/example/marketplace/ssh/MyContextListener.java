@@ -1,6 +1,6 @@
 package com.example.marketplace.ssh;
 
-import com.example.marketplace.Util;
+import com.example.marketplace.util.Util;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;

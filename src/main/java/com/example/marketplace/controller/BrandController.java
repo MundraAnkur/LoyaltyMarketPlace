@@ -7,7 +7,7 @@ import com.example.marketplace.model.RRRules;
 import com.example.marketplace.model.Reward;
 import com.example.marketplace.model.Tiers;
 import com.example.marketplace.model.TiersSetupDTO;
-import com.example.marketplace.repository.ApplicationDao;
+import com.example.marketplace.util.ApplicationDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

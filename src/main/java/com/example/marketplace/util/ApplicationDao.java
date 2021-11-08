@@ -1,4 +1,4 @@
-package com.example.marketplace.repository;
+package com.example.marketplace.util;
 
 import com.example.marketplace.model.ActivityCategory;
 import com.example.marketplace.model.Brands;

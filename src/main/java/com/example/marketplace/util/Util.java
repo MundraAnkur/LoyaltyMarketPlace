@@ -1,4 +1,4 @@
-package com.example.marketplace;
+package com.example.marketplace.util;
 
 public class Util {
     public static String userName;

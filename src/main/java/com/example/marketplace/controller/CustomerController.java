@@ -5,7 +5,7 @@ import com.example.marketplace.model.LoyaltyProgram;
 import com.example.marketplace.model.Reward;
 import com.example.marketplace.model.Wallet;
 import com.example.marketplace.model.WalletCategory;
-import com.example.marketplace.repository.ApplicationDao;
+import com.example.marketplace.util.ApplicationDao;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
