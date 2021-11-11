@@ -200,6 +200,8 @@ public class BrandController {
         String brandId = ApplicationDao.getLoggedInCustomerOrBrand(jdbcTemplate);
         ValidateLoyaltyProgram validateLoyaltyProgram = new ValidateLoyaltyProgram(jdbcTemplate, brandId);
         List<String> defects = validateLoyaltyProgram.validate();
+        if(defects.isEmpty())
+            jdbcTemplate.update("UPDATE LOYALTY_PROGRAM SET IS_VALIDATED = 1 WHERE CODE = ?",validateLoyaltyProgram.getLpCode());
         model.addAttribute("defects", defects);
         return "validate_loyalty_program";
     }

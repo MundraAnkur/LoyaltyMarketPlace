@@ -52,7 +52,7 @@
                             </li>
                         </ul>
                     </fieldset>
-                    <input type="submit" name="select" class="next action-button" value="Select" />
+                    <input type="submit" name="select" class="button2" value="Select" />
                 </form>
             </div>
 
@@ -67,10 +67,14 @@
                             </li>
                         </ul>
                     </fieldset>
-                    <input type="submit" name="perform" class="next action-button" value="Perform" />
+                    <input type="submit" name="perform" class="button2" value="Perform" />
                 </form>
             </div>
 
+            <div th:if="${redeem_error != null}" class="isa_error">
+                <p th:text="${redeem_error}"></p>
+                <meta http-equiv="refresh" content="3,url=/customer/reward_activities">
+            </div>
         </div>
     </div>
 </div>

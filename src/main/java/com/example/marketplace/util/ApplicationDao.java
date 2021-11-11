@@ -35,9 +35,9 @@ public class ApplicationDao {
     public static Map<String, String> queries = new LinkedHashMap<>();
 
     static {
-        queries.put("List all customers that are not part of Brand02’s program","");
-        queries.put("List the rewards that are part of Brand01 loyalty program","");
-        queries.put("List customers of Brand01 that have redeemed at least twice","");
+        queries.put("List all customers that are not part of Brand02’s program","SELECT C.CUSTOMER_ID, C.NAME FROM CUSTOMER C, ENROLL_CUSTOMER EC, LOYALTY_PROGRAM LP WHERE LP.BRAND_ID = 'B02' and LP.CODE = EC.LP_CODE and EC.CUSTOMER_ID <> C.CUSTOMER_ID");
+        queries.put("List the rewards that are part of Brand01 loyalty program","SELECT R.REWARD_ID, R.REWARD_NAME FROM REWARD R, LOYALTY_PROGRAM L WHERE L.BRAND_ID = 'B01' and R.LP_CODE = L.CODE");
+        queries.put("List customers of Brand01 that have redeemed at least twice","SELECT C.CUSTOMER_ID, C.NAME FROM CUSTOMER C WHERE C.WALLET_ID IN (SELECT W.WALLET_ID FROM WALLET W WHERE W.CATEGORY = 'REDEEM' and W.LP_CODE = (SELECT CODE FROM LOYALTY_PROGRAM WHERE BRAND_ID = 'B01') GROUP BY (W.WALLET_ID) HAVING COUNT(*) > 1)");
         queries.put("All brands where total number of points redeemed overall is less than 500 points","");
         queries.put("For Brand01, list for each activity type in their loyalty program, the number instances that have occurred","");
         queries.put("List customers that have joined a loyalty program but have not participated in any activity in that program","");

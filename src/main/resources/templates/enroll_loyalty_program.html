@@ -56,6 +56,9 @@
                     <input type="submit" name="select" class="next action-button" value="Select" />
                 </form>
             </div>
+            <div th:if="${enroll_error !=null}" class="isa_error">
+                <p th:text="${enroll_error}"></p>
+            </div>
         </div>
     </div>
 </div>

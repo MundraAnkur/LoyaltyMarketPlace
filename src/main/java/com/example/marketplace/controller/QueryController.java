@@ -1,5 +1,6 @@
 package com.example.marketplace.controller;
 
+import com.example.marketplace.util.ApplicationDao;
 import com.example.marketplace.util.QueryDTO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
@@ -25,11 +26,21 @@ public class QueryController {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @GetMapping("/default_query")
+    public String defaultQueryResult(@ModelAttribute("queryDto") QueryDTO query, Model model)
+    {
+        Map<String, String> queries = ApplicationDao.queries;
+        String sql = queries.get(query.getQuery());
+        List<Map<String,Object>> mapList = jdbcTemplate.queryForList(sql);
+        model.addAttribute("query",query.getQuery());
+        model.addAttribute("data",mapList);
+        return "query_result";
+    }
+
     @GetMapping("/ask")
-    public String askQuery(@ModelAttribute("queryDto") QueryDTO query, Model model)
+    public String askQuery(Model model)
     {
         QueryDTO queryDTO = new QueryDTO();
-        model.addAttribute("editQuery",query.getQuery());
         model.addAttribute("queryDto", queryDTO);
         return "ask_query";
     }

@@ -6,6 +6,7 @@ import com.example.marketplace.model.Reward;
 import com.example.marketplace.model.Wallet;
 import com.example.marketplace.model.WalletCategory;
 import com.example.marketplace.util.ApplicationDao;
+import org.springframework.jdbc.UncategorizedSQLException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,9 +47,18 @@ public class CustomerController {
     }
 
     @PostMapping("/enroll_loyalty_program")
-    public String enrollCustomerInLoyaltyProgram(@ModelAttribute("loyaltyProgram") LoyaltyProgram program) {
+    public String enrollCustomerInLoyaltyProgram(@ModelAttribute("loyaltyProgram") LoyaltyProgram program, Model model) {
+        String enroll_error = "Can not enroll to this loyalty program as it is not validated";
         String loggedInCustomer = ApplicationDao.getLoggedInCustomerOrBrand(jdbcTemplate);
-        ApplicationDao.enrollCustomer(jdbcTemplate, loggedInCustomer, program.getCode());
+        try {
+            ApplicationDao.enrollCustomer(jdbcTemplate, loggedInCustomer, program.getCode());
+        } catch (UncategorizedSQLException e) {
+            if(e.getLocalizedMessage().contains(enroll_error))
+                model.addAttribute("enroll_error","Can not enroll to "+ program.getCode() + " loyalty program as it is not validated");
+            else
+                model.addAttribute("enroll_error",e.getLocalizedMessage());
+           return "enroll_loyalty_program";
+        }
         return "redirect:/customer/enroll_loyalty_program?success";
     }
 
@@ -116,6 +126,8 @@ public class CustomerController {
             model.addAttribute("reward", new Reward());
         } else {
             //perform activity
+            String insufficient_points_error = "Reward can not be redeemed, insufficient points to redeem reward";
+            String instances_error = "Reward can not be redeemed, no more reward instances available";
             String customer = ApplicationDao.getLoggedInCustomerOrBrand(jdbcTemplate);
             String walletId = ApplicationDao.getWalletId(jdbcTemplate, customer);
             Wallet wallet = new Wallet();
@@ -124,7 +136,17 @@ public class CustomerController {
             wallet.setCategory(WalletCategory.REDEEM.name());
             wallet.setActivityName(reward.getRewardName());
             System.out.println("Redeem "+wallet);
-            ApplicationDao.performCustomerTransaction(jdbcTemplate, wallet);
+            try {
+                ApplicationDao.performCustomerTransaction(jdbcTemplate, wallet);
+            } catch (UncategorizedSQLException e) {
+                if(e.getLocalizedMessage().contains(insufficient_points_error))
+                    model.addAttribute("redeem_error",insufficient_points_error);
+                else if (e.getLocalizedMessage().contains(instances_error))
+                    model.addAttribute("redeem_error",instances_error);
+                else
+                    model.addAttribute("redeem_error",e.getLocalizedMessage());
+                return "customer_redeem_points";
+            }
             return "redirect:customer/redeem_points?success";
         }
 

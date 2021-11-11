@@ -24,6 +24,11 @@ public class ValidateLoyaltyProgram {
         programValidationFlows = new ArrayList<>();
     }
 
+    public String getLpCode()
+    {
+        return program.getCode();
+    }
+
     public List<String> validate()
     {
         if(program.getIsValidated()==1)
