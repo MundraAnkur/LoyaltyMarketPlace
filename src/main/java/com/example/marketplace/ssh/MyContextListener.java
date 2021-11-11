@@ -1,7 +1,5 @@
 package com.example.marketplace.ssh;
 
-import com.example.marketplace.util.Util;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
@@ -28,7 +26,6 @@ public class MyContextListener implements ServletContextListener {
         System.out.println("Context initialized ... !");
         try
         {
-            System.out.println("Unity ... "+ Util.userName+", ,,,,"+Util.pass_phrase);
             connections = new SSHConnection();
         }
         catch (Throwable e)

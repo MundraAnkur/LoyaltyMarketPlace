@@ -22,6 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,19 @@ import java.util.Map;
  * November 06, 2021
  */
 public class ApplicationDao {
+
+    public static Map<String, String> queries = new LinkedHashMap<>();
+
+    static {
+        queries.put("List all customers that are not part of Brand02’s program","");
+        queries.put("List the rewards that are part of Brand01 loyalty program","");
+        queries.put("List customers of Brand01 that have redeemed at least twice","");
+        queries.put("All brands where total number of points redeemed overall is less than 500 points","");
+        queries.put("For Brand01, list for each activity type in their loyalty program, the number instances that have occurred","");
+        queries.put("List customers that have joined a loyalty program but have not participated in any activity in that program","");
+        queries.put("For Customer C0003, and Brand02, number of activities they have done in the period of 08/1/2021 and 9/30/2021","");
+        queries.put("List all the loyalty programs that include “refer a friend” as an activity in at least one of their reward rules","");
+    }
 
     public static void saveActivityCategory(JdbcTemplate jdbcTemplate, ActivityCategory category){
         jdbcTemplate.update("INSERT INTO ACTIVITY_CATEGORY values (?,?)"

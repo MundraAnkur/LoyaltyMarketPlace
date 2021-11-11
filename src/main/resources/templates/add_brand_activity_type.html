@@ -39,14 +39,11 @@
       </div>
 
       <form class="ui form" th:action="@{/brand/add_activity_brand_regular}" method="post" th:object="${activityType}">
-        <span> Activity List : </span><span th:text="${activityList}"></span>
         <ul>
           <li th:each="activity : ${activityList}">
-            <p>In activity list </p>
             <div class="ui checkbox">
               <input type="checkbox" th:field="*{activityName}" th:value="${activity}">
               <label th:text="${activity}"></label>
-
             </div>
           </li>
         </ul>

@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Validate Loyalty Program</title>
+    <title>Query</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
     <link rel="stylesheet" href="/css/register.css">
 </head>
@@ -12,7 +12,7 @@
     <div class="container-fluid">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link active" th:href="@{/brand}">Home</a>
+                <a class="nav-link active" th:href="@{/query}">Home</a>
             </li>
         </ul>
 
@@ -31,23 +31,22 @@
 </nav>
 <br>
 <br>
-<h2 align="center"> Validate Loyalty Program </h2>
-<div th:if="${defects !=null and #lists.isEmpty(defects)}">
-    <div class="alert alert-info center">Loyalty Program Validated!</div>
-    <meta http-equiv="refresh" content="3,url=/brand">
-</div>
 
-<div th:if="${defects == null}" class="center">
-    <form th:action="@{/brand/validate_loyalty_program}" method="post">
-        <button type="submit" class="button2">Validate</button>
-    </form>
+<h1 class="center">Ask Query</h1>
+<div class = "container">
+    <div class = "row center">
+        <div class = "col-md-6 col-md-offset-3">
+            <form th:action = "@{/query/ask}" method = "post" th:object="${queryDto}">
+                <textarea id="test" rows = "7" cols = "80" name = "input_query" th:field="*{query}"></textarea><br>
+                <input class="button2" type = "submit" value = "submit" />
+            </form>
+        </div>
+    </div>
 </div>
-
-<div th:if="${not #lists.isEmpty(defects)}">
-    <ul th:each="defect : ${defects}" class="isa_error">
-        <li><p th:text="${defect}"></p></li>
-    </ul>
-    <meta http-equiv="refresh" content="5,url=/brand">
-</div>
+<script type="text/javascript">
+    $(window).on('load', function () {
+        document.getElementById("test").value = 'bkjb' +'${editQuery}';
+    })
+</script>
 </body>
 </html>

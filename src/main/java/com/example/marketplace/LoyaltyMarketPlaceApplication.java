@@ -14,5 +14,4 @@ public class LoyaltyMarketPlaceApplication {
     public static void main(String[] args) {
         SpringApplication.run(LoyaltyMarketPlaceApplication.class, args);
     }
-
 }

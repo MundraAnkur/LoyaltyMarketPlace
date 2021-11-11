@@ -39,19 +39,17 @@
       </div>
 
       <form class="ui form" th:action="@{/brand/add_reward_brand_regular}" method="post" th:object="${rewardType}">
-        <span> Rewards List : </span><span th:text="${rewardsList}"></span>
         <ul>
           <li th:each="reward : ${rewardsList}">
             <div class="ui checkbox">
               <input type="checkbox" th:field="*{rewardName}" th:value="${reward}">
               <label th:text="${reward}"></label>
-
             </div>
           </li>
         </ul>
 
         <div class="field">
-          <button type="submit">Add Rewards</button>
+          <button class="button2" type="submit">Add Rewards</button>
         </div>
       </form>
 

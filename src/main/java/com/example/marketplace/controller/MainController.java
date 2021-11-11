@@ -1,7 +1,16 @@
 package com.example.marketplace.controller;
 
+import com.example.marketplace.util.ApplicationDao;
+import com.example.marketplace.util.QueryDTO;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author ankurmundra
@@ -11,7 +20,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class MainController {
 
     @GetMapping("")
-    public String showHomePage() {
+    public String showHomePage(Model model) {
+        Set<String> queries = ApplicationDao.queries.keySet();
+        model.addAttribute("queries",queries);
+        model.addAttribute("queryDto",new QueryDTO());
         return "index";
     }
 

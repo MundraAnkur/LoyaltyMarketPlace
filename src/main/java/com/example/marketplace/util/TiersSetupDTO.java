@@ -1,4 +1,6 @@
-package com.example.marketplace.model;
+package com.example.marketplace.util;
+
+import com.example.marketplace.model.Tiers;
 
 import java.util.ArrayList;
 import java.util.List;

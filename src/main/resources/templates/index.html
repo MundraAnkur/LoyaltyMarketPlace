@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>Customer Loyalty MarketPlace Application</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
+    <link rel="stylesheet" href="/css/register.css">
+    <link rel="stylesheet" href="/static/css/register.css">
 </head>
 <body>
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
@@ -36,9 +38,30 @@
 </nav>
 <br>
 <br>
-<div class="container-fluid text-center">
-    <h1>Welcome to Market Place</h1>
-    <!--    <a class="h2" th:href="@{/users}">Manage Users</a>-->
+<h2 align="center">Welcome to Market Place</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+
+            <form th:action="@{/query/ask}" method="get">
+                <fieldset>
+                    <legend>Queries:</legend>
+                    <ul>
+                        <li th:each="query : ${queries}">
+                            <input type="radio" th:field="${queryDto.query}" th:value="${query}"/>
+                            <label th:for="${query}" th:text="${query}"></label>
+                        </li>
+                    </ul>
+                </fieldset>
+                <div class="center">
+                    <input type="submit" name="select" class="button2" value="Query" />
+                </div>
+            </form>
+            <div class="center">
+                <a th:href="@{/query/ask}">Ask Another Query</a>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

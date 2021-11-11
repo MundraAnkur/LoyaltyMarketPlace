@@ -32,35 +32,6 @@ public class SSHConnection {
         } catch (JSchException e) {
             e.printStackTrace();
         }
-
-    }
-
-    private void createDataBaseConnectionForTesting(int port)
-    {
-        System.out.println("An example for updating a Row from Mysql Database!");
-        Connection con = null;
-        String driver = "oracle.jdbc.OracleDriver";
-        String url = "jdbc:oracle:thin:@localhost:4321:orcl01";
-//        String url = "jdbc:oracle:thin:@" + ORACLE_REMOTE_SERVER +":" + REMOTE_PORT + ":orcl01";
-        String dbUser = "amundra";
-        String dbPasswd = "abcd1234";
-
-        try {
-            Class.forName(driver);
-            con = DriverManager.getConnection(url, dbUser, dbPasswd);
-            Statement stmt = null;
-            ResultSet rs = null;
-            stmt = con.createStatement();
-            rs = stmt.executeQuery("SELECT COF_NAME, PRICE FROM COFFEES1");
-            while (rs.next()) {
-                String s = rs.getString("COF_NAME");
-                float n = rs.getFloat("PRICE");
-                System.out.println(s + "   " + n);
-            }
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-
     }
 
     public void closeSSH () {

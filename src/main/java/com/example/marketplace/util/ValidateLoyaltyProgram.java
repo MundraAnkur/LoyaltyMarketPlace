@@ -1,6 +1,7 @@
 package com.example.marketplace.util;
 
 import com.example.marketplace.model.LoyaltyProgram;
+import com.example.marketplace.model.RERules;
 import com.example.marketplace.model.RRRules;
 import com.example.marketplace.model.Tiers;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,7 +16,7 @@ import java.util.Set;
 public class ValidateLoyaltyProgram {
     private final JdbcTemplate jdbcTemplate;
     private final LoyaltyProgram program;
-    List<String> programValidationFlows;
+    private final List<String> programValidationFlows;
 
     public ValidateLoyaltyProgram(JdbcTemplate jdbcTemplate, String brandId) {
         this.jdbcTemplate = jdbcTemplate;
@@ -23,15 +24,17 @@ public class ValidateLoyaltyProgram {
         programValidationFlows = new ArrayList<>();
     }
 
-    public void validate()
+    public List<String> validate()
     {
         if(program.getIsValidated()==1)
             programValidationFlows.add("Loyalty Program " + program.getName() + " is already Validated");
         else {
             validateTierStatus();
-            validateTierStatus();
             validateTiers();
+            validateRewardAndRewardRedeemRules();
+            validateActivityAndRewardEarningRules();
         }
+        return programValidationFlows;
     }
 
     private void validateTierStatus()
@@ -61,21 +64,41 @@ public class ValidateLoyaltyProgram {
         }
     }
 
-    private void validateRewardAndRewardRules()
+    private void validateRewardAndRewardRedeemRules()
     {
         List<String> rewards = ApplicationDao.getProgramRewards(jdbcTemplate,program.getCode());
         Set<String> rewardSet = new HashSet<>();
         if(rewards.isEmpty())
             programValidationFlows.add("Rewards for the program were not selected");
+        else
+        {
+            List<RRRules> rrRules = ApplicationDao.getAllRRRulesForProgram(jdbcTemplate, program.getCode());
 
-        List<RRRules> rrRules = ApplicationDao.getAllRRRulesForProgram(jdbcTemplate, program.getCode());
+            rrRules.forEach(rule -> rewardSet.add(rule.getRewardName()));
+            rewardSet.forEach(rewards::remove);
+            String remainingRules = String.join(",",rewards);
 
-        rrRules.forEach(rule -> rewardSet.add(rule.getRewardName()));
-        rewardSet.forEach(rewards::remove);
-        String remainingRules = String.join(",",rewards);
+            if(!rewards.isEmpty())
+                programValidationFlows.add("Reward Redeeming Rule for "+ remainingRules +" are not defined");
+        }
+    }
 
-        if(!rewards.isEmpty())
-            programValidationFlows.add("Reward Redeeming Rule for "+ remainingRules +" are not defined");
+    private void validateActivityAndRewardEarningRules()
+    {
+        List<String> activities = ApplicationDao.getProgramActivities(jdbcTemplate,program.getCode());
+        Set<String> activitySet = new HashSet<>();
+        if(activities.isEmpty())
+            programValidationFlows.add("Rewards for the program were not selected");
+        else
+        {
+            List<RERules> reRules = ApplicationDao.getAllRERulesForProgram(jdbcTemplate, program.getCode());
+            reRules.forEach(rule -> activitySet.add(rule.getActivityName()));
+            activitySet.forEach(activities::remove);
+            String remainingRules = String.join(",",activities);
+
+            if(!activities.isEmpty())
+                programValidationFlows.add("Reward Earning Rule for "+ remainingRules +" are not defined");
+        }
     }
 
     private static boolean sequentialLevels(List<Integer> list) {

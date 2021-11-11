@@ -6,8 +6,9 @@ import com.example.marketplace.model.RERules;
 import com.example.marketplace.model.RRRules;
 import com.example.marketplace.model.Reward;
 import com.example.marketplace.model.Tiers;
-import com.example.marketplace.model.TiersSetupDTO;
+import com.example.marketplace.util.TiersSetupDTO;
 import com.example.marketplace.util.ApplicationDao;
+import com.example.marketplace.util.ValidateLoyaltyProgram;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +30,7 @@ public class BrandController {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @GetMapping("/brand")
+    @GetMapping
     public String brand() {
         return "brand_landing";
     }
@@ -68,8 +69,7 @@ public class BrandController {
     }
 
     @GetMapping("/tier_menu")
-    public String getTierMenu()
-    {
+    public String getTierMenu() {
         return "add_tier_menu";
     }
 
@@ -97,7 +97,7 @@ public class BrandController {
     @PostMapping("/add_tier_info")
     public String submitAddTierInfo(@ModelAttribute("tiersDto") TiersSetupDTO tiersSetupDTO) {
         tiersSetupDTO.getTiersList().forEach(tier -> tier.setLpCode(addedLoyaltyProgram));
-        ApplicationDao.addTiers(jdbcTemplate,tiersSetupDTO.getTiersList());
+        ApplicationDao.addTiers(jdbcTemplate, tiersSetupDTO.getTiersList());
         return "redirect:/brand/add_tier_info?success";
     }
 
@@ -106,23 +106,21 @@ public class BrandController {
         Activity activity = new Activity();
         model.addAttribute("activityType", activity);
         List<String> activityList = ApplicationDao.getAllActivities(jdbcTemplate);
-        System.out.println("In add brand activity : "+ activityList);
-        model.addAttribute("activityList",activityList);
+        System.out.println("In add brand activity : " + activityList);
+        model.addAttribute("activityList", activityList);
         return "add_brand_activity_type";
     }
 
 
-
     @PostMapping("/add_activity_brand_regular")
-    public String submitForm(@ModelAttribute("activityType") Activity activityType)
-    {
+    public String submitForm(@ModelAttribute("activityType") Activity activityType) {
         String brandId = ApplicationDao.getLoggedInCustomerOrBrand(jdbcTemplate);
         String code = ApplicationDao.getLoyaltyProgramCodeFromBrandId(jdbcTemplate, brandId);
 
-        String [] activities = activityType.getActivityName().split("[,]");
-        for(String activityName : activities) {
+        String[] activities = activityType.getActivityName().split("[,]");
+        for (String activityName : activities) {
             String activityId = ApplicationDao.getActivityId(jdbcTemplate, activityName);
-            ApplicationDao.enrollBrandActivities(jdbcTemplate,activityId,activityName,code);
+            ApplicationDao.enrollBrandActivities(jdbcTemplate, activityId, activityName, code);
         }
         return "activity_reward_menu";
     }
@@ -132,19 +130,18 @@ public class BrandController {
         List<String> rewardsList = ApplicationDao.getAllRewards(jdbcTemplate);
         Reward reward = new Reward();
         model.addAttribute("rewardType", reward);
-        model.addAttribute("rewardsList",rewardsList);
+        model.addAttribute("rewardsList", rewardsList);
         return "add_brand_reward_type";
     }
 
     @PostMapping("/add_reward_brand_regular")
-    public String submitFormReward(@ModelAttribute("rewardType") Reward rewardType)
-    {
+    public String submitFormReward(@ModelAttribute("rewardType") Reward rewardType) {
         String brandId = ApplicationDao.getLoggedInCustomerOrBrand(jdbcTemplate);
         String code = ApplicationDao.getLoyaltyProgramCodeFromBrandId(jdbcTemplate, brandId);
-        String [] rewards = rewardType.getRewardName().split("[,]");
-        for(String rewardName : rewards) {
+        String[] rewards = rewardType.getRewardName().split("[,]");
+        for (String rewardName : rewards) {
             String rewardId = ApplicationDao.getRewardId(jdbcTemplate, rewardName);
-            ApplicationDao.enrollBrandRewards(jdbcTemplate,rewardId,rewardName,code);
+            ApplicationDao.enrollBrandRewards(jdbcTemplate, rewardId, rewardName, code);
         }
         return "activity_reward_menu";
     }
@@ -181,7 +178,6 @@ public class BrandController {
         rrRules.setVersion(1);
         ApplicationDao.addRRRule(jdbcTemplate, rrRules);
         return "redirect:/brand";
-
     }
 
     @GetMapping("/update_RR_rules")
@@ -195,7 +191,16 @@ public class BrandController {
     }
 
     @GetMapping("/validate_loyalty_program")
-    public String validateLoyaltyProgram(Model model) {
+    public String validateLoyaltyProgram() {
+        return "validate_loyalty_program";
+    }
+
+    @PostMapping("/validate_loyalty_program")
+    public String validateProgram(Model model) {
+        String brandId = ApplicationDao.getLoggedInCustomerOrBrand(jdbcTemplate);
+        ValidateLoyaltyProgram validateLoyaltyProgram = new ValidateLoyaltyProgram(jdbcTemplate, brandId);
+        List<String> defects = validateLoyaltyProgram.validate();
+        model.addAttribute("defects", defects);
         return "validate_loyalty_program";
     }
 }

@@ -111,17 +111,16 @@ public class CustomerController {
 
         if (reward == null || reward.getRewardName() == null) {
             List<String> activities = ApplicationDao.getProgramRewards(jdbcTemplate, program.getCode());
+            rewardActivityLpCode = program.getCode();
             model.addAttribute("activities", activities);
-            Reward activity1 = new Reward();
-            activity1.setLpCode(program.getCode());
-            model.addAttribute("reward", activity1);
+            model.addAttribute("reward", new Reward());
         } else {
             //perform activity
             String customer = ApplicationDao.getLoggedInCustomerOrBrand(jdbcTemplate);
             String walletId = ApplicationDao.getWalletId(jdbcTemplate, customer);
             Wallet wallet = new Wallet();
             wallet.setWalletId(walletId);
-            wallet.setLpCode(reward.getLpCode());
+            wallet.setLpCode(rewardActivityLpCode);
             wallet.setCategory(WalletCategory.REDEEM.name());
             wallet.setActivityName(reward.getRewardName());
             System.out.println("Redeem "+wallet);
