@@ -35,14 +35,24 @@ public class ApplicationDao {
     public static Map<String, String> queries = new LinkedHashMap<>();
 
     static {
-        queries.put("List all customers that are not part of Brand02’s program","SELECT C.CUSTOMER_ID, C.NAME FROM CUSTOMER C, ENROLL_CUSTOMER EC, LOYALTY_PROGRAM LP WHERE LP.BRAND_ID = 'B02' and LP.CODE = EC.LP_CODE and EC.CUSTOMER_ID <> C.CUSTOMER_ID");
-        queries.put("List the rewards that are part of Brand01 loyalty program","SELECT R.REWARD_ID, R.REWARD_NAME FROM REWARD R, LOYALTY_PROGRAM L WHERE L.BRAND_ID = 'B01' and R.LP_CODE = L.CODE");
-        queries.put("List customers of Brand01 that have redeemed at least twice","SELECT C.CUSTOMER_ID, C.NAME FROM CUSTOMER C WHERE C.WALLET_ID IN (SELECT W.WALLET_ID FROM WALLET W WHERE W.CATEGORY = 'REDEEM' and W.LP_CODE = (SELECT CODE FROM LOYALTY_PROGRAM WHERE BRAND_ID = 'B01') GROUP BY (W.WALLET_ID) HAVING COUNT(*) > 1)");
-        queries.put("All brands where total number of points redeemed overall is less than 500 points","");
-        queries.put("For Brand01, list for each activity type in their loyalty program, the number instances that have occurred","");
-        queries.put("List customers that have joined a loyalty program but have not participated in any activity in that program","");
-        queries.put("For Customer C0003, and Brand02, number of activities they have done in the period of 08/1/2021 and 9/30/2021","");
-        queries.put("List all the loyalty programs that include “refer a friend” as an activity in at least one of their reward rules","");
+        queries.put("List all customers that are not part of Brand02’s program", "SELECT DISTINCT C.CUSTOMER_ID, C.NAME FROM CUSTOMER C, ENROLL_CUSTOMER EC, LOYALTY_PROGRAM LP " +
+                "WHERE LP.BRAND_ID = 'B02' and LP.CODE = EC.LP_CODE and EC.CUSTOMER_ID <> C.CUSTOMER_ID");
+        queries.put("List the rewards that are part of Brand01 loyalty program", "SELECT DISTINCT R.REWARD_ID, R.REWARD_NAME FROM REWARD R, LOYALTY_PROGRAM L WHERE L.BRAND_ID = 'B01' and R.LP_CODE = L.CODE");
+        queries.put("List customers of Brand01 that have redeemed at least twice", "SELECT DISTINCT C.CUSTOMER_ID, C.NAME FROM CUSTOMER C WHERE C.WALLET_ID IN " +
+                "(SELECT W.WALLET_ID FROM WALLET W WHERE W.CATEGORY = 'REDEEM' and W.LP_CODE = (SELECT CODE FROM LOYALTY_PROGRAM WHERE BRAND_ID = 'B01') GROUP BY (W.WALLET_ID) HAVING COUNT(*) > 1)");
+        queries.put("All brands where total number of points redeemed overall is less than 500 points", "SELECT DISTINCT B.BRAND_ID, B.BRAND_NAME FROM BRANDS B, LOYALTY_PROGRAM L " +
+                "WHERE B.BRAND_ID = L.BRAND_ID and L.CODE IN (SELECT LP_CODE FROM WALLET WHERE CATEGORY = 'REDEEM' GROUP BY LP_CODE HAVING -1*SUM(POINTS) < 500)");
+        queries.put("For Brand01, list for each activity type in their loyalty program, the number instances that have occurred", "SELECT W.ACTIVITY_NAME, COUNT(*) AS FREQUENCY " +
+                "FROM WALLET W WHERE W.CATEGORY = 'EARN' and W.LP_CODE = (SELECT CODE FROM LOYALTY_PROGRAM WHERE BRAND_ID = 'B02') GROUP BY W.ACTIVITY_NAME");
+        queries.put("List customers that have joined a loyalty program but have not participated in any activity in that program",
+                "SELECT DISTINCT EC.CUSTOMER_ID, EC.LP_CODE FROM ENROLL_CUSTOMER EC WHERE EXISTS(SELECT W.WALLET_ID FROM WALLET W, CUSTOMER C WHERE EC.CUSTOMER_ID = C.CUSTOMER_ID" +
+                        " and C.WALLET_ID = W.WALLET_ID and W.LP_CODE = EC.LP_CODE GROUP BY W.WALLET_ID, W.LP_CODE HAVING COUNT(*) < 2)");
+        queries.put("For Customer C0003, and Brand02, number of activities they have done in the period of 08/1/2021 and 9/30/2021",
+                "SELECT COUNT(*) AS NUMBER_OF_ACTIVITIES FROM WALLET W WHERE W.LP_CODE = (SELECT CODE FROM LOYALTY_PROGRAM WHERE BRAND_ID = 'B02') and W.WALLET_ID = " +
+                        "(SELECT WALLET_ID FROM CUSTOMER WHERE CUSTOMER_ID = 'C0003') " +
+                        "and W.\"DATE\" >= TO_DATE('11/06/2021', 'MM/DD/YYYY') and W.\"DATE\" < TO_DATE('11/08/2021', 'MM/DD/YYYY')\n");
+        queries.put("List all the loyalty programs that include “refer a friend” as an activity in at least one of their reward rules",
+                "SELECT CODE, NAME FROM LOYALTY_PROGRAM WHERE CODE IN (SELECT LP_CODE FROM RE_RULES WHERE ACTIVITY_NAME = 'Refer a friend')");
     }
 
     public static void saveActivityCategory(JdbcTemplate jdbcTemplate, ActivityCategory category){
@@ -86,14 +96,16 @@ public class ApplicationDao {
 
     public static List<LoyaltyProgram> getLoyaltyProgramsNotEnrolled(JdbcTemplate jdbcTemplate, String cid)
     {
-        String lQuery = "SELECT CODE, NAME, BRAND_ID, IS_TIERED, IS_VALIDATED FROM LOYALTY_PROGRAM WHERE CODE NOT IN (SELECT LP_CODE FROM ENROLL_CUSTOMER WHERE CUSTOMER_ID = ?)";
+        String lQuery = "SELECT CODE, NAME, BRAND_ID, IS_TIERED, IS_VALIDATED FROM LOYALTY_PROGRAM WHERE CODE NOT IN " +
+                "(SELECT LP_CODE FROM ENROLL_CUSTOMER WHERE CUSTOMER_ID = ?)";
         List<Map<String,Object>> list = jdbcTemplate.queryForList(lQuery,cid);
         return convertLoyaltyMapToList(list);
     }
 
     public static List<LoyaltyProgram> getCustomerEnrolledPrograms(JdbcTemplate jdbcTemplate, String customerId)
     {
-        String lQuery = "SELECT L.CODE, L.NAME, L.BRAND_ID, L.IS_TIERED, L.IS_VALIDATED FROM LOYALTY_PROGRAM L WHERE L.CODE IN (SELECT LP_CODE FROM ENROLL_CUSTOMER WHERE CUSTOMER_ID = ?)";
+        String lQuery = "SELECT L.CODE, L.NAME, L.BRAND_ID, L.IS_TIERED, L.IS_VALIDATED FROM LOYALTY_PROGRAM L WHERE L.CODE IN " +
+                "(SELECT LP_CODE FROM ENROLL_CUSTOMER WHERE CUSTOMER_ID = ?)";
         List<Map<String,Object>> list = jdbcTemplate.queryForList(lQuery,customerId);
         return convertLoyaltyMapToList(list);
     }

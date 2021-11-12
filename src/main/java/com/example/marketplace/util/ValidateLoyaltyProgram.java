@@ -12,7 +12,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-
+/**
+ * @author ankurmundra
+ * November 08, 2021
+ */
 public class ValidateLoyaltyProgram {
     private final JdbcTemplate jdbcTemplate;
     private final LoyaltyProgram program;
