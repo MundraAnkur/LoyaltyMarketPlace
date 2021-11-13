@@ -40,11 +40,11 @@
                     <option th:each="r : ${brandList}" th:value="${r.brandId}" th:text="${r.brandId}" ></option>
                 </select>
             </div>
-            <button type="submit" class="action-button">Get Info</button>
+            <button type="submit" class="button2">Get Info</button>
         </form>
     </div>
 
-    <div th:if="${program != null}">
+    <div th:if="${brandInfo != null}">
         <h3><strong>Brand Information</strong></h3>
         <div class="row center">
             <div class="col-lg-10 mt-5 mb-5">
@@ -69,105 +69,106 @@
             </div>
         </div>
 
-        <h3><strong>Brand Loyalty Program Information</strong></h3>
-        <div class="row center">
-            <div class="col-lg-10 mt-5 mb-5">
-                <table id="program" class="table table-bordered" style="width: 100%">
-                    <thead>
-                    <tr>
-                        <th>Loyalty Program</th>
-                        <th>Name</th>
-                        <th>Brand Id</th>
-                        <th>Tiered</th>
-                        <th>Validated</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td th:text="${program.code}">Loyalty Program</td>
-                        <td th:text="${program.name}">Name</td>
-                        <td th:text="${program.brandId}">Brand Id</td>
-                        <td th:text="${program.isTiered}">Tiered</td>
-                        <td th:text="${program.isValidated}">Validated</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div th:if="${not #lists.isEmpty(tiersList)}">
-            <h3><strong>Tiers</strong></h3>
+        <div th:if="${program != null}" >
+            <h3><strong>Brand Loyalty Program Information</strong></h3>
             <div class="row center">
                 <div class="col-lg-10 mt-5 mb-5">
-                    <table id="tiers_tab" class="table table-bordered" style="width: 100%">
+                    <table id="program" class="table table-bordered" style="width: 100%">
                         <thead>
                         <tr>
-                            <th>Tier Name</th>
-                            <th>Level</th>
-                            <th>Multiplier</th>
-                            <th>Points Required</th>
+                            <th>Loyalty Program</th>
+                            <th>Name</th>
+                            <th>Brand Id</th>
+                            <th>Tiered</th>
+                            <th>Validated</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="tier : ${tiersList}">
-                            <td th:text="${tier.tierName}">Tier Name</td>
-                            <td th:text="${tier.level}">Level</td>
-                            <td th:text="${tier.multiplier}">Multiplier</td>
-                            <td th:text="${tier.pointsRequired}">Points Required</td>
+                        <tr>
+                            <td th:text="${program.code}">Loyalty Program</td>
+                            <td th:text="${program.name}">Name</td>
+                            <td th:text="${program.brandId}">Brand Id</td>
+                            <td th:text="${program.isTiered}">Tiered</td>
+                            <td th:text="${program.isValidated}">Validated</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-        </div>
-
-        <h3><strong>Reward Earning Rules</strong></h3>
-        <div class="row center">
-            <div class="col-lg-10 mt-5 mb-5">
-                <table id="rr" class="table table-bordered" style="width: 100%">
-                    <thead>
-                    <tr>
-                        <th>Rule Code</th>
-                        <th>Activity Name</th>
-                        <th>Points</th>
-                        <th>Version</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="data : ${reRulesList}">
-                        <td th:text="${data.ruleCode}">Rule Code</td>
-                        <td th:text="${data.activityName}">Activity Name</td>
-                        <td th:text="${data.points}">Points</td>
-                        <td th:text="${data.version}">Version</td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div th:if="${not #lists.isEmpty(tiersList)}">
+                <h3><strong>Tiers</strong></h3>
+                <div class="row center">
+                    <div class="col-lg-10 mt-5 mb-5">
+                        <table id="tiers_tab" class="table table-bordered" style="width: 100%">
+                            <thead>
+                            <tr>
+                                <th>Tier Name</th>
+                                <th>Level</th>
+                                <th>Multiplier</th>
+                                <th>Points Required</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="tier : ${tiersList}">
+                                <td th:text="${tier.tierName}">Tier Name</td>
+                                <td th:text="${tier.level}">Level</td>
+                                <td th:text="${tier.multiplier}">Multiplier</td>
+                                <td th:text="${tier.pointsRequired}">Points Required</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </div>
 
-        <h3><strong>Reward Redeeming Rules</strong></h3>
-        <div class="row center">
-            <div class="col-lg-10 mt-5 mb-5">
-                <table id="re" class="table table-bordered" style="width: 100%">
-                    <thead>
-                    <tr>
-                        <th>Rule Code</th>
-                        <th>Reward Name</th>
-                        <th>Points</th>
-                        <th>Instances</th>
-                        <th>Version</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="data : ${rrRulesList}">
-                        <td th:text="${data.ruleCode}">Rule Code</td>
-                        <td th:text="${data.rewardName}">Reward Name</td>
-                        <td th:text="${data.points}">Points</td>
-                        <td th:text="${data.instances}">Instances</td>
-                        <td th:text="${data.version}">Version</td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div th:if="${not #lists.isEmpty(reRulesList)}" class="row center">
+                <h3><strong>Reward Earning Rules</strong></h3>
+                <div class="col-lg-10 mt-5 mb-5">
+                    <table id="rr" class="table table-bordered" style="width: 100%">
+                        <thead>
+                        <tr>
+                            <th>Rule Code</th>
+                            <th>Activity Name</th>
+                            <th>Points</th>
+                            <th>Version</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="data : ${reRulesList}">
+                            <td th:text="${data.ruleCode}">Rule Code</td>
+                            <td th:text="${data.activityName}">Activity Name</td>
+                            <td th:text="${data.points}">Points</td>
+                            <td th:text="${data.version}">Version</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div th:if="${not #lists.isEmpty(rrRulesList)}" class="row center">
+                <h3><strong>Reward Redeeming Rules</strong></h3>
+                <div class="col-lg-10 mt-5 mb-5">
+                    <table id="re" class="table table-bordered" style="width: 100%">
+                        <thead>
+                        <tr>
+                            <th>Rule Code</th>
+                            <th>Reward Name</th>
+                            <th>Points</th>
+                            <th>Instances</th>
+                            <th>Version</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="data : ${rrRulesList}">
+                            <td th:text="${data.ruleCode}">Rule Code</td>
+                            <td th:text="${data.rewardName}">Reward Name</td>
+                            <td th:text="${data.points}">Points</td>
+                            <td th:text="${data.instances}">Instances</td>
+                            <td th:text="${data.version}">Version</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

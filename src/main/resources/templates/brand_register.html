@@ -38,11 +38,12 @@
             <div class="card px-0 pt-4 pb-0 mt-3 mb-3">
                 <!-- success message -->
                 <div th:if="${param.success}">
-                    <div class="alert alert-info">Brand Information Added!</div>
                     <div sec:authorize="isAuthenticated()">
+                        <div class="alert alert-info">Brand Information Added!</div>
                         <meta http-equiv="refresh" content="2,url=/admin">
                     </div>
                     <div sec:authorize="isAnonymous()">
+                        <div class="alert alert-info">Registration Successful!</div>
                         <meta http-equiv="refresh" content="2,url=/login">
                     </div>
                 </div>

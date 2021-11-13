@@ -75,18 +75,21 @@ public class AdminController {
     public String showBrandInfo(@ModelAttribute("brand") Brands brands, Model model)
     {
         Brands brandInfo = ApplicationDao.getBrand(jdbcTemplate,brands.getBrandId());
-        LoyaltyProgram program = ApplicationDao.getLoyaltyProgram(jdbcTemplate,brands.getBrandId());
-        List<Tiers> tiersList = new ArrayList<>();
-        if(program.getIsTiered() == 1)
-            tiersList = ApplicationDao.getAllTiersForProgram(jdbcTemplate,program.getCode());
-        List<RERules> reRulesList = ApplicationDao.getAllRERulesForProgram(jdbcTemplate,program.getCode());
-        List<RRRules> rrRulesList = ApplicationDao.getAllRRRulesForProgram(jdbcTemplate,program.getCode());
-
         model.addAttribute("brandInfo",brandInfo);
-        model.addAttribute("program",program);
-        model.addAttribute("tiersList",tiersList);
-        model.addAttribute("reRulesList",reRulesList);
-        model.addAttribute("rrRulesList",rrRulesList);
+        LoyaltyProgram program = ApplicationDao.getLoyaltyProgram(jdbcTemplate,brands.getBrandId());
+        if(program != null)
+        {
+            List<Tiers> tiersList = new ArrayList<>();
+            if(program.getIsTiered() == 1)
+                tiersList = ApplicationDao.getAllTiersForProgram(jdbcTemplate,program.getCode());
+            List<RERules> reRulesList = ApplicationDao.getAllRERulesForProgram(jdbcTemplate,program.getCode());
+            List<RRRules> rrRulesList = ApplicationDao.getAllRRRulesForProgram(jdbcTemplate,program.getCode());
+
+            model.addAttribute("program",program);
+            model.addAttribute("tiersList",tiersList);
+            model.addAttribute("reRulesList",reRulesList);
+            model.addAttribute("rrRulesList",rrRulesList);
+        }
         return "brand_info";
     }
 

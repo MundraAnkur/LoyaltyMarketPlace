@@ -40,37 +40,36 @@
                     <option th:each="r : ${customerList}" th:value="${r.customerId}" th:text="${r.customerId}" ></option>
                 </select>
             </div>
-            <button type="submit" class="action-button">Get Info</button>
+            <button type="submit" class="button2">Get Info</button>
         </form>
     </div>
 
-    <div th:if="${not #lists.isEmpty(walletData)}">
-        <h2><strong>Customer Information</strong></h2>
-        <div class="row center">
-            <div class="col-lg-10 mt-5 mb-5">
-                <table class="table table-bordered" id="customer" style="width: 100%">
-                    <thead>
-                        <tr>
-                            <th>Customer Id</th>
-                            <th>Name</th>
-                            <th>Phone</th>
-                            <th>Address</th>
-                            <th>Wallet Id</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td th:text="${customerInfo.customerId}">Customer Id</td>
-                            <td th:text="${customerInfo.name}">Name</td>
-                            <td th:text="${customerInfo.phone}">Phone</td>
-                            <td th:text="${customerInfo.address}">Address</td>
-                            <td th:text="${customerInfo.walletId}">Wallet Id</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+    <div th:if="${customerInfo !=null}" class="row center">
+        <div class="col-lg-10 mt-5 mb-5">
+            <table class="table table-bordered" id="customer" style="width: 100%">
+                <thead>
+                <tr>
+                    <th>Customer Id</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Wallet Id</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${customerInfo.customerId}">Customer Id</td>
+                    <td th:text="${customerInfo.name}">Name</td>
+                    <td th:text="${customerInfo.phone}">Phone</td>
+                    <td th:text="${customerInfo.address}">Address</td>
+                    <td th:text="${customerInfo.walletId}">Wallet Id</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
+    </div>
 
+    <div th:if="${not #lists.isEmpty(walletData)}">
         <h2><strong>Customer Wallet Information</strong></h2>
         <div class="row center">
             <div class="col-lg-10 mt-5 mb-5">
