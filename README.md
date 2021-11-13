@@ -1,7 +1,6 @@
 # LoyaltyMarketPlace
 * This package contains two jar files *LoyaltyMarketPlace_T21.jar* and *LoyaltyMarketPlaceWithPortForwading_T21.jar*
 * Also I've provided two properties file for the two jars namely project.properties and project_tunnel.properties these files can be used when you want to change some configuration like database user name, password, server port, etc.
-* 
 
 **LoyaltyMarketPlaceWithPortForwading_T21.jar**
 * As the database is at the remote server, we need to create SSH Tunnel to connect to the database using port forwarding mechanism
