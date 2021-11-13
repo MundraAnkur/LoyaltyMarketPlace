@@ -384,4 +384,14 @@ public class ApplicationDao {
             }
         });
     }
+
+    public static String getLatestVersion(JdbcTemplate jdbcTemplate, String ruleCode) throws Exception
+    {
+        return jdbcTemplate.queryForObject("SELECT MAX(VERSION) FROM RE_RULES WHERE RULE_CODE = ?",String.class,ruleCode);
+    }
+
+    public static String getLatestVersionRR(JdbcTemplate jdbcTemplate, String ruleCode) throws Exception
+    {
+        return jdbcTemplate.queryForObject("SELECT MAX(VERSION) FROM RR_RULES WHERE RULE_CODE = ?",String.class,ruleCode);
+    }
 }

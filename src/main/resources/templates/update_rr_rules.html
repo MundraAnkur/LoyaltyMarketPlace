@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Update Redemption Rules</title>
+    <title>Add Reward Earning Rules</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
 </head>
 <body>
@@ -30,6 +30,41 @@
 </nav>
 <br>
 <br>
-<p th:align="center"> Update Redemption Rules </p>
+<p th:align="center">Add Reward Earning Rules </p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+
+            <form th:action="@{/brand/update_RR_rules}" method="post" th:object="${rrRules}">
+                <div class="form-group">
+                    <label class="control-label" for="ruleCode"> Rule Code</label>
+                    <input id="ruleCode" class="form-control" th:field="*{ruleCode}"
+                           required autofocus="autofocus" />
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="rewardName"> Reward Name</label>
+                    <input id="rewardName" class="form-control" th:field="*{rewardName}"
+                           required autofocus="autofocus" />
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="points"> Points </label>
+                    <input id="points" class="form-control" th:field="*{points}"
+                           required autofocus="autofocus" />
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="instances"> Instances </label>
+                    <input id="instances" class="form-control" th:field="*{instances}"
+                           required autofocus="autofocus" />
+                </div>
+
+                <button type="submit">Update RR Rule</button>
+
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>
