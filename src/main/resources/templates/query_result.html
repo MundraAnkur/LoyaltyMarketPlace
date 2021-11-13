@@ -49,7 +49,7 @@
           </thead>
           <tbody>
           <tr th:each="row : ${data}">
-            <th th:each="field: ${row}" th:text="${field.value}"></th>
+            <td th:each="field: ${row}" th:text="${field.value}"></td>
           </tr>
           </tbody>
         </table>

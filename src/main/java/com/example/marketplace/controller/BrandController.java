@@ -1,9 +1,15 @@
 package com.example.marketplace.controller;
 
-import com.example.marketplace.model.*;
+import com.example.marketplace.model.Activity;
+import com.example.marketplace.model.LoyaltyProgram;
+import com.example.marketplace.model.MarketPlaceUser;
+import com.example.marketplace.model.RERules;
+import com.example.marketplace.model.RRRules;
+import com.example.marketplace.model.Reward;
+import com.example.marketplace.model.Tiers;
 import com.example.marketplace.repository.UserJpaRepository;
-import com.example.marketplace.util.TiersSetupDTO;
 import com.example.marketplace.util.ApplicationDao;
+import com.example.marketplace.util.TiersSetupDTO;
 import com.example.marketplace.util.ValidateLoyaltyProgram;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -97,6 +103,13 @@ public class BrandController {
         return "tiers";
     }
 
+    @GetMapping("/add_tier_info")
+    public String addTiers(Model model)
+    {
+        model.addAttribute("tiersDto", new TiersSetupDTO());
+        return "tiers";
+    }
+
     @PostMapping("/add_tier_info")
     public String submitAddTierInfo(@ModelAttribute("tiersDto") TiersSetupDTO tiersSetupDTO) {
         tiersSetupDTO.getTiersList().forEach(tier -> tier.setLpCode(addedLoyaltyProgram));
@@ -163,7 +176,7 @@ public class BrandController {
         reRules.setLpCode(code);
         reRules.setVersion(1);
         ApplicationDao.addRERule(jdbcTemplate, reRules);
-        return "redirect:/brand";
+        return "redirect:/brand/add_RE_rules?success";
     }
 
     @GetMapping("/add_RR_rules")
@@ -180,7 +193,7 @@ public class BrandController {
         rrRules.setLpCode(code);
         rrRules.setVersion(1);
         ApplicationDao.addRRRule(jdbcTemplate, rrRules);
-        return "redirect:/brand";
+        return "redirect:/brand/add_RR_rules?success";
     }
 
     @GetMapping("/update_RR_rules")
@@ -192,32 +205,13 @@ public class BrandController {
 
     @PostMapping("/update_RR_rules")
     public String submitUpdateRRRules(@ModelAttribute("rrRules") RRRules rrRules) {
-        try
-        {
-            String version_str = ApplicationDao.getLatestVersionRR(jdbcTemplate, rrRules.getRuleCode());
-            int version = Integer.parseInt(version_str);
-            version += 1;
-            System.out.println("Updated version is : "+version);
-
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Object user = authentication.getPrincipal();
-            String name;
-            if (user instanceof UserDetails) {
-                name = ((UserDetails) user).getUsername();
-                MarketPlaceUser marketPlaceUser = userService.findByUserName(name).get();
-                String id = marketPlaceUser.getRoleId();
-                System.out.println("The ID for the user is : " + id);
-                String code = ApplicationDao.getLoyaltyProgramCodeFromBrandId(jdbcTemplate, id);
-                rrRules.setLpCode(code);
-                rrRules.setVersion(version);
-                System.out.println(rrRules);
-                ApplicationDao.addRRRule(jdbcTemplate, rrRules);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "error";
-        }
-        return "redirect:/brand";
+        String brandId = ApplicationDao.getLoggedInCustomerOrBrand(jdbcTemplate);
+        String code = ApplicationDao.getLoyaltyProgramCodeFromBrandId(jdbcTemplate, brandId);
+        int version = ApplicationDao.getLatestVersionRR(jdbcTemplate, rrRules.getRuleCode()) + 1;
+        rrRules.setLpCode(code);
+        rrRules.setVersion(version);
+        ApplicationDao.addRRRule(jdbcTemplate, rrRules);
+        return "redirect:/brand/update_RE_rules?success";
 
     }
 
@@ -230,32 +224,13 @@ public class BrandController {
 
     @PostMapping("/update_RE_rules")
     public String submitUpdateRERules(@ModelAttribute("reRules") RERules reRules) {
-        try
-        {
-            String version_str = ApplicationDao.getLatestVersion(jdbcTemplate, reRules.getRuleCode());
-            int version = Integer.parseInt(version_str);
-            version += 1;
-            System.out.println("Updated version is : "+version);
-
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            Object user = authentication.getPrincipal();
-            String name;
-            if (user instanceof UserDetails) {
-                name = ((UserDetails) user).getUsername();
-                MarketPlaceUser marketPlaceUser = userService.findByUserName(name).get();
-                String id = marketPlaceUser.getRoleId();
-                System.out.println("The ID for the user is : " + id);
-                String code = ApplicationDao.getLoyaltyProgramCodeFromBrandId(jdbcTemplate, id);
-                reRules.setLpCode(code);
-                reRules.setVersion(version);
-                System.out.println(reRules);
-                ApplicationDao.addRERule(jdbcTemplate, reRules);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "error";
-        }
-        return "redirect:/brand";
+        String brandId = ApplicationDao.getLoggedInCustomerOrBrand(jdbcTemplate);
+        String code = ApplicationDao.getLoyaltyProgramCodeFromBrandId(jdbcTemplate, brandId);
+        int version = ApplicationDao.getLatestVersion(jdbcTemplate, reRules.getRuleCode()) + 1;
+        reRules.setLpCode(code);
+        reRules.setVersion(version);
+        ApplicationDao.addRERule(jdbcTemplate, reRules);
+        return "redirect:/brand/update_RE_rules?success";
     }
 
     @GetMapping("/validate_loyalty_program")

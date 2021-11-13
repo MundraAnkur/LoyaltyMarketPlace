@@ -11,7 +11,7 @@ CREATE OR REPLACE TRIGGER CAN_CUSTOMER_ENROLL_IN_LOYALTY_PROGRAM BEFORE INSERT O
 DECLARE
     is_valid INT;
 BEGIN
-    is_valid := CAN_CUSTOMER_ENROLL_IN_LOYALTY_PROGRAM(:new.LP_CODE);
+    is_valid := IS_LOYALTY_PROGRAM_VALIDATED(:new.LP_CODE);
     IF(is_valid = 0) THEN
         RAISE_APPLICATION_ERROR(-20021,'Can not enroll to this loyalty program as it is not validated',False);
     END IF;
@@ -43,16 +43,20 @@ DECLARE
     required_points NUMBER(10);
     cumulative_points NUMBER(10);
     current_level INT;
+    top_level INT;
     tier VARCHAR2(10);
 BEGIN
     SELECT CP.TIER_STATUS, CP.TOTAL_POINTS INTO current_tier, cumulative_points FROM CUSTOMER_PROGRAM_STATUS CP WHERE CP.WALLET_ID = :new.WALLET_ID and CP.LP_CODE = :new.LP_CODE;
     cumulative_points := cumulative_points + :new.POINTS;
     IF(current_tier IS NOT NULL) THEN
+        SELECT MAX(T."LEVEL") INTO top_level FROM TIERS T WHERE T.LP_CODE = :new.LP_CODE;
         SELECT T."LEVEL" INTO current_level FROM TIERS T WHERE T.LP_CODE = :new.LP_CODE and T.TIER_NAME = current_tier;
-        SELECT T.TIER_NAME, T.POINTS_REQUIRED INTO tier, required_points FROM TIERS T WHERE T.LP_CODE = :new.LP_CODE and T."LEVEL" = current_level+1;
-        IF (cumulative_points >= required_points) THEN
-            UPDATE CUSTOMER_PROGRAM_STATUS CP SET CP.TIER_STATUS = tier WHERE CP.WALLET_ID = :new.WALLET_ID and CP.LP_CODE = :new.LP_CODE;
-        END IF;
+        IF (current_level < top_level) THEN
+            SELECT T.TIER_NAME, T.POINTS_REQUIRED INTO tier, required_points FROM TIERS T WHERE T.LP_CODE = :new.LP_CODE and T."LEVEL" = current_level+1;
+            IF (cumulative_points >= required_points) THEN
+                UPDATE CUSTOMER_PROGRAM_STATUS CP SET CP.TIER_STATUS = tier WHERE CP.WALLET_ID = :new.WALLET_ID and CP.LP_CODE = :new.LP_CODE;
+            END IF;
+        end if;
     END IF;
     UPDATE CUSTOMER_PROGRAM_STATUS CP SET CP.TOTAL_POINTS = cumulative_points WHERE CP.WALLET_ID = :new.WALLET_ID and CP.LP_CODE = :new.LP_CODE;
 END;

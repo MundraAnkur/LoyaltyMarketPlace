@@ -38,7 +38,7 @@
             <!-- success message -->
             <div th:if="${param.success}">
                 <div class="alert alert-info">Activity Completed!</div>
-                <meta http-equiv="refresh" content="2,url=/customer/reward_activities">
+                <meta http-equiv="refresh" content="1,url=/customer/redeem_points">
             </div>
 
             <div th:if="${not #lists.isEmpty(programs)}">
@@ -73,7 +73,7 @@
 
             <div th:if="${redeem_error != null}" class="isa_error">
                 <p th:text="${redeem_error}"></p>
-                <meta http-equiv="refresh" content="3,url=/customer/reward_activities">
+                <meta http-equiv="refresh" content="3,url=/customer/redeem_points">
             </div>
         </div>
     </div>

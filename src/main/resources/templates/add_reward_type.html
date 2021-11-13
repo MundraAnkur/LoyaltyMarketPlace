@@ -34,14 +34,14 @@
 <br>
 <br>
 <!-- Create HTML registration form -->
-<div class="container">
-  <div class="row center">
+<div class="container center">
+  <div class="row">
     <div class="col-md-6 col-md-offset-3">
 
       <!-- success message -->
       <div th:if="${param.success}">
         <div class="alert alert-info">Reward Added!</div>
-        <meta http-equiv="refresh" content="2,url=/admin/add_reward">
+        <meta http-equiv="refresh" content="1,url=/admin/add_reward">
       </div>
 
       <form th:action="@{/admin/add_reward}" method="post" th:object="${rewardCategory}">
@@ -56,6 +56,7 @@
           <input id="rewardName" class="form-control" th:field="*{rewardName}"
                  required autofocus="autofocus" />
         </div>
+        <br>
         <button type="submit" class="button2">Add Reward</button>
       </form>
     </div>

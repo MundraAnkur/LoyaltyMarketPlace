@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author ankurmundra
@@ -102,7 +103,9 @@ public class CustomerController {
 
         String customer = ApplicationDao.getLoggedInCustomerOrBrand(jdbcTemplate);
         List<Wallet> list = ApplicationDao.viewWalletData(jdbcTemplate, customer);
+        List<Map<String,Object>> customerProgramStatuses = ApplicationDao.getCustomerStatusMap(jdbcTemplate,customer);
         model.addAttribute("transactions", list);
+        model.addAttribute("data", customerProgramStatuses);
         return "customer_wallet";
     }
 
@@ -138,7 +141,8 @@ public class CustomerController {
             System.out.println("Redeem "+wallet);
             try {
                 ApplicationDao.performCustomerTransaction(jdbcTemplate, wallet);
-            } catch (UncategorizedSQLException e) {
+            }
+            catch (UncategorizedSQLException e) {
                 if(e.getLocalizedMessage().contains(insufficient_points_error))
                     model.addAttribute("redeem_error",insufficient_points_error);
                 else if (e.getLocalizedMessage().contains(instances_error))
@@ -147,7 +151,7 @@ public class CustomerController {
                     model.addAttribute("redeem_error",e.getLocalizedMessage());
                 return "customer_redeem_points";
             }
-            return "redirect:customer/redeem_points?success";
+            return "redirect:/customer/redeem_points?success";
         }
 
         return "customer_redeem_points";

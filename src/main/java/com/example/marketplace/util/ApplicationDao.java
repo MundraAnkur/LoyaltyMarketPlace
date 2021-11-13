@@ -43,14 +43,14 @@ public class ApplicationDao {
         queries.put("All brands where total number of points redeemed overall is less than 500 points", "SELECT DISTINCT B.BRAND_ID, B.BRAND_NAME FROM BRANDS B, LOYALTY_PROGRAM L " +
                 "WHERE B.BRAND_ID = L.BRAND_ID and L.CODE IN (SELECT LP_CODE FROM WALLET WHERE CATEGORY = 'REDEEM' GROUP BY LP_CODE HAVING -1*SUM(POINTS) < 500)");
         queries.put("For Brand01, list for each activity type in their loyalty program, the number instances that have occurred", "SELECT W.ACTIVITY_NAME, COUNT(*) AS FREQUENCY " +
-                "FROM WALLET W WHERE W.CATEGORY = 'EARN' and W.LP_CODE = (SELECT CODE FROM LOYALTY_PROGRAM WHERE BRAND_ID = 'B02') GROUP BY W.ACTIVITY_NAME");
+                "FROM WALLET W WHERE W.CATEGORY = 'EARN' and W.LP_CODE = (SELECT CODE FROM LOYALTY_PROGRAM WHERE BRAND_ID = 'B01') GROUP BY W.ACTIVITY_NAME");
         queries.put("List customers that have joined a loyalty program but have not participated in any activity in that program",
                 "SELECT DISTINCT EC.CUSTOMER_ID, EC.LP_CODE FROM ENROLL_CUSTOMER EC WHERE EXISTS(SELECT W.WALLET_ID FROM WALLET W, CUSTOMER C WHERE EC.CUSTOMER_ID = C.CUSTOMER_ID" +
                         " and C.WALLET_ID = W.WALLET_ID and W.LP_CODE = EC.LP_CODE GROUP BY W.WALLET_ID, W.LP_CODE HAVING COUNT(*) < 2)");
-        queries.put("For Customer C0003, and Brand02, number of activities they have done in the period of 08/1/2021 and 9/30/2021",
+        queries.put("For Customer C0003, and Brand02, number of activities they have done in the period of 11/13/2021 and 11/16/2021",
                 "SELECT COUNT(*) AS NUMBER_OF_ACTIVITIES FROM WALLET W WHERE W.LP_CODE = (SELECT CODE FROM LOYALTY_PROGRAM WHERE BRAND_ID = 'B02') and W.WALLET_ID = " +
                         "(SELECT WALLET_ID FROM CUSTOMER WHERE CUSTOMER_ID = 'C0003') " +
-                        "and W.\"DATE\" >= TO_DATE('11/06/2021', 'MM/DD/YYYY') and W.\"DATE\" < TO_DATE('11/08/2021', 'MM/DD/YYYY')\n");
+                        "and W.\"DATE\" >= TO_DATE('11/13/2021', 'MM/DD/YYYY') and W.\"DATE\" < TO_DATE('11/17/2021', 'MM/DD/YYYY')\n");
         queries.put("List all the loyalty programs that include “refer a friend” as an activity in at least one of their reward rules",
                 "SELECT CODE, NAME FROM LOYALTY_PROGRAM WHERE CODE IN (SELECT LP_CODE FROM RE_RULES WHERE ACTIVITY_NAME = 'Refer a friend')");
     }
@@ -211,6 +211,14 @@ public class ApplicationDao {
             customerProgramStatuses.add(status);
         }
         return customerProgramStatuses;
+    }
+
+    public static List<Map<String,Object>> getCustomerStatusMap(JdbcTemplate jdbcTemplate, String cid)
+    {
+        String walletId = getWalletId(jdbcTemplate,cid);
+        String cQuery = "SELECT WALLET_ID, LP_CODE, TOTAL_POINTS, TIER_STATUS FROM CUSTOMER_PROGRAM_STATUS WHERE WALLET_ID = ?";
+        List<Map<String,Object>> list = jdbcTemplate.queryForList(cQuery,walletId);
+        return list;
     }
 
     public static List<Brands> getAllBrands(JdbcTemplate jdbcTemplate)
@@ -388,13 +396,13 @@ public class ApplicationDao {
         });
     }
 
-    public static String getLatestVersion(JdbcTemplate jdbcTemplate, String ruleCode) throws Exception
+    public static int getLatestVersion(JdbcTemplate jdbcTemplate, String ruleCode)
     {
-        return jdbcTemplate.queryForObject("SELECT MAX(VERSION) FROM RE_RULES WHERE RULE_CODE = ?",String.class,ruleCode);
+        return jdbcTemplate.queryForObject("SELECT MAX(VERSION) FROM RE_RULES WHERE RULE_CODE = ?",Integer.class,ruleCode);
     }
 
-    public static String getLatestVersionRR(JdbcTemplate jdbcTemplate, String ruleCode) throws Exception
+    public static int getLatestVersionRR(JdbcTemplate jdbcTemplate, String ruleCode)
     {
-        return jdbcTemplate.queryForObject("SELECT MAX(VERSION) FROM RR_RULES WHERE RULE_CODE = ?",String.class,ruleCode);
+        return jdbcTemplate.queryForObject("SELECT MAX(VERSION) FROM RR_RULES WHERE RULE_CODE = ?",Integer.class,ruleCode);
     }
 }

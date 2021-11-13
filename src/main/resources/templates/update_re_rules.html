@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
-    <title>Add Reward Earning Rules</title>
+    <title>Update Reward Earning Rules</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css} "/>
     <link rel="stylesheet" href="/css/register.css">
 </head>
@@ -12,7 +12,7 @@
     <div class="container-fluid">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link active" href="/">Home</a>
+                <a class="nav-link active" th:href="@{/brand}">Home</a>
             </li>
         </ul>
 
@@ -31,11 +31,15 @@
 </nav>
 <br>
 <br>
-<p th:align="center">Add Reward Earning Rules </p>
+<p th:align="center">Update Reward Earning Rules </p>
 <div class="container">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-
+            <!-- success message -->
+            <div th:if="${param.success}">
+                <div class="alert alert-info">Rule Updated!</div>
+                <meta http-equiv="refresh" content="1,url=/brand/update_RE_rules">
+            </div>
             <form th:action="@{/brand/update_RE_rules}" method="post" th:object="${reRules}">
                 <div class="form-group">
                     <label class="control-label" for="ruleCode"> Rule Code</label>
@@ -54,9 +58,10 @@
                     <input id="points" class="form-control" th:field="*{points}"
                            required autofocus="autofocus" />
                 </div>
-
-                <button type="submit">Update RE Rule</button>
-
+                <br>
+                <div class="center">
+                    <button type="submit" class="button2">Update RE Rule</button>
+                </div>
             </form>
         </div>
     </div>

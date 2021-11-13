@@ -59,6 +59,25 @@
             </table>
         </div>
     </div>
+
+    <h3><strong>Customer Program Status</strong></h3>
+    <div class="row">
+        <div class="col-lg-10 mt-5 mb-5">
+            <table class="table table-bordered" id="customer_status" style="width: 100%">
+                <thead>
+                <tr th:if="${not #lists.isEmpty(data)}">
+                    <th th:each="field: ${data[0]}" th:text="${field.key}"></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="row : ${data}">
+                    <td th:each="field: ${row}" th:text="${field.value}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 </body>
 </html>
