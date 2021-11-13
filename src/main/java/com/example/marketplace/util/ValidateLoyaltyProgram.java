@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 /**
  * @author ankurmundra
@@ -111,13 +112,6 @@ public class ValidateLoyaltyProgram {
 
     private static boolean sequentialLevels(List<Integer> list) {
         Collections.sort(list);
-        Integer prev = null;
-        int seq = 0;
-        for(Integer i : list) {
-            if(prev != null && prev+1 == i)
-                seq = seq == 0 ? 2 : seq+1;
-            prev = i;
-        }
-        return seq >= 3;
+        return IntStream.range(0, list.size() - 1).noneMatch(i -> list.get(i + 1) != list.get(i) + 1);
     }
 }

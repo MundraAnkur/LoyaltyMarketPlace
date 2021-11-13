@@ -23,11 +23,13 @@ DECLARE
     walletId VARCHAR2(20);
     tier_t VARCHAR2(10) default null;
     is_tiered NUMBER(1,0);
+    level_min INT DEFAULT 0;
 BEGIN
     SELECT C.WALLET_ID INTO walletId FROM CUSTOMER C where C.CUSTOMER_ID = :new.CUSTOMER_ID;
     SELECT L.IS_TIERED INTO is_tiered FROM LOYALTY_PROGRAM L WHERE L.CODE = :new.LP_CODE;
     IF(is_tiered = 1) THEN
-        SELECT T.TIER_NAME INTO tier_t FROM TIERS T WHERE T.LP_CODE = :new.LP_CODE and T."LEVEL" = 0;
+        SELECT MIN(T."LEVEL") INTO level_min FROM TIERS T WHERE T.LP_CODE = :new.LP_CODE;
+        SELECT T.TIER_NAME INTO tier_t FROM TIERS T WHERE T.LP_CODE = :new.LP_CODE and T."LEVEL" = level_min;
     END IF;
 
     INSERT INTO CUSTOMER_PROGRAM_STATUS VALUES (walletId,:new.LP_CODE,0,tier_t);
@@ -39,7 +41,7 @@ END;
 
 CREATE OR REPLACE TRIGGER UPDATE_CUSTOMER_TIER_STATUS_AND_LOYALTY_POINTS AFTER INSERT ON WALLET FOR EACH ROW
 DECLARE
-    current_tier VARCHAR2(10) default null;
+    current_tier VARCHAR2(10) DEFAULT NULL;
     required_points NUMBER(10);
     cumulative_points NUMBER(10);
     current_level INT;
