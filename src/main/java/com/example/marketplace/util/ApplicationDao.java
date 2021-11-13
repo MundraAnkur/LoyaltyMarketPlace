@@ -247,8 +247,11 @@ public class ApplicationDao {
     public static LoyaltyProgram getLoyaltyProgram(JdbcTemplate jdbcTemplate, String bid)
     {
         String lQuery = "SELECT CODE, NAME, BRAND_ID, IS_TIERED, IS_VALIDATED FROM LOYALTY_PROGRAM WHERE BRAND_ID = ?";
-        Map<String,Object> map = jdbcTemplate.queryForList(lQuery,bid).get(0);
+        List<Map<String,Object>> list = jdbcTemplate.queryForList(lQuery,bid);
         LoyaltyProgram program = new LoyaltyProgram();
+        if(list.isEmpty())
+            return null;
+        Map<String,Object> map = list.get(0);
         program.setCode((String) map.get("CODE"));
         program.setName((String) map.get("NAME"));
         program.setBrandId((String) map.get("BRAND_ID"));
