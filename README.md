@@ -1,9 +1,6 @@
 # LoyaltyMarketPlace
-> TEAM 21
->  * Ankur Mundra,           amundra, ID: 200420164
->  * Shruti Satish Magai,    smagai   ID: 200370473
->  * Sai kumar goud Vengali, svengal  ID: 200420722 
->  * Raviteja Chirumamilla,  rchirum  ID: 200421111
+>  * Ankur Mundra,           amundra, 
+>  * Shruti Satish Magai,    smagai   
 
 * This package contains two jar files *LoyaltyMarketPlace_T21.jar* and *LoyaltyMarketPlaceWithPortForwading_T21.jar*
 * Also I've provided two properties file for the two jars namely project.properties and project_tunnel.properties these files can be used when you want to change some configuration like database user name, password, server port, etc.
